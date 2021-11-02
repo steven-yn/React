@@ -1,0 +1,9 @@
+App: 이벤트 핸들링과 이벤트로 받은 객체를 state에 담고 사용하기
+-EventPractice1 : 클래스형 onChange 사용하여 e객체로 콘솔에 값띄우기
+-EventPractice2 : e객체를 state에 담고, 그값을 alert창으로 띄우기
+-EventPractice3 : 임의의 메서드 ( 미리 준비하는 함수 ) 와 바인딩
+-EventPractice4 : transform-class-properties 문법 가독성 높이기
+-EventPractice5 : input 여러개와 key 값 다루기
+-EventPractice6 : onKeyPress 이벤트 적용
+-EventPractice7 : 클래스의 함수화
+-EventPractice8 : 

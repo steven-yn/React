@@ -1,0 +1,313 @@
+state 기능 및 라이프 사이클 기능 사용가능.
+임의의 메서드 정의 할수있다.
+
+클래스형 컴포넌트에서는 render 함수가 꼭 있어야 하고, 그안에서
+보여주어야할 JSX 를 반환해야한다.
+
+함수 컴포넌트의 장점
+- 선언하기 편하다.
+- 메모리 자원도 덜사용한다.
+- 함수 컴포넌트의 결과물이 파일크기가 더 작다.
+( 성능과 파일 크기면에서 사실상 크나큰 차이는 없다. )
+
+주요 단점
+state와 라이프사이클API의 사용이 불가능.
+Hooks 기능 도입되면서 해결. 조금 다른방식으로 비슷한 작업 가능.
+컴포넌트를 새로 작성할 때 함수 컴포넌트와 Hooks를 사용하도록 권장.
+
+기본 컴포넌트 코드형식 단축키
+
+함수형 : rsc + enter
+클래스형 : rcc + enter
+
+3.2.3 모듈 내보내기 및 불러오기
+
+3.2.3.1 모듈 내보내기 (export)
+
+export default MyComponent;
+
+다른 파일이 이 파일을 import 할때 
+위에서 선언한 MyComponent 클래스를 불러오게 함.
+
+3.2.3.2 모듈 불러오기 (import)
+
+3.3 props
+
+properties 를 줄인 표현, 컴포넌트 속성을 설정할때 사용하는 요소.
+props 값은 해당 컴포넌트를 불러와 
+사용하는 부모 컴포넌트에서 설정할 수 있다.
+
+3.3.1 JSX 내부에서 props 렌더링
+
+App 부모 컴포넌트 ( import 하고있는 컴포넌트 ) 에서
+props 파라미터를 입력해서 return 하게되면
+MyComponent 에서 props에 미리 등록된 구문을 수행하게되는구조?
+
+defaultProps
+MyComponent2.defaultProps 로 사용가능
+
+3.3.4 태그사이 내용 보여주는 children
+
+3.3.5 비구조화 할당 문법을 통해 props 내부값 추출.
+
+3.3.6 propTypes 를 통한 props 검증
+컴포넌트의 필수 props를 지정하거나 props 타입을 지정할때는 
+propTypes를 사용합니다. import구문을 사용하여 불러와야 한다.
+
+3.3.6.1 더 많은 propTypes
+https://github.com/facebook/prop-types 에 확인가능.
+
+3.3.7 클래스형 컴포넌트 props 사용.
+
+3.4 state
+
+리액트에서 state는 컴포넌트 내부에서 바뀔수 있는 값을 의미.
+App 컴포넌트 에서 MyComponent 를 사용할때
+props를 바꿔줘야 값이 변경됨. MyComponent에서는 전달받은
+name 값을 직접 바꿀수 없다.
+
+클래스형 컴포넌트 : state
+함수 컴포넌트 : useState 함수를 통해 사용하는 state
+
+3.4.1 클래스형 컴포넌트 state
+
+constructor(props) {
+    super(props);
+    // state의 초깃값 설정.
+    this.state = {
+      number: 0,
+    };
+  }
+  
+위 코드는 컴포넌트의 생성자 메서드이다.
+클래스형 컴포넌트 에서 constructor 를 작성할 때는 반드시
+super(props)를 호출 해줘야함.
+이 함수는 현재 클래스형 컴포넌트가 상속받고있는 리액트의
+Component 클래스가 지닌 생성자 함수를 호출해줌.
+
+그다음엔 this.state 값에 초깃값 설정, state는 객체형식 이어야 함.
+
+render() {
+    const { number } = this.state;
+    return (
+      <div>
+        <h1>{number}</h1>
+        <button
+          // onClick을 통해 버튼이 클릭되었을때 호출할 함수를 지정.
+          onClick={() => {
+            this.setState({ number: number + 1 });
+          }}
+        >
+          +1
+        </button>
+      </div>
+    );
+  }
+  
+render 함수에서 현재 state를 조회할 때는 this.state를 조회
+그리고 button 안에 onClick 이라는 값을 props 로 넣어줬는데
+이는 버튼이 클릭될때 호출시킬 함수를 설정할수 있게 해줌.
+이를 이벤트를 설정한다고 함.
+이벤트로 설정할 함수를 넣어 줄 때는 화살표 함수 문법 사용.
+함수 내부 this.setState 는 state 값을 바꿀수 있게 해줌.
+
+3.4.1.3 this.setState에 객체 대신 함수 인자 전달하기
+
+this.setState 를 사용하여 state 값을 업데이트하면 상태가
+비돟기적으로 업데이트 된다.
+onClick에 설정한 함수 내부에서 this.setState 를 두번 호출하면....
+두번 해도 적용되지않는다. state값이 바로 바뀌지는 않기때문!
+
+해결책은 객체 대신 함수를 인자로 넣어주면 된다.
+
+3.4.1.4 this.setState 끝난후 특정작업 실행
+
+setState 사용하여 값을 업데이트 한다음 특정작업 하고싶을때는
+setState 두번째 파라미터로 콜백 함수를 등록하여 작업 처리 할수있다.
+
+3.4.2 useState
+16.8 버전부터 사용가능
+Hooks 사용.
+
+3.4.2.1 배열 비구조화 할당.
+
+배열안에 들어있는 값을 쉽게 추출할수 있도록 해주는 문법.
+
+const array = [1,2];
+const one = array[0];
+const two = array[1];
+
+->
+
+const array = [1,2];
+const [one,two] = array;
+
+3.4.2.2 useState 사용하기.
+
+useState 함수의 인자에는 상태의 초깃값.
+useState 반드시 객체가 아니어도 상관없음.
+수, 문자열, 객체, 배열.
+함수를 호출하면 배열이 반환됨.
+첫번째 원소는 현재상태, 두번쨰 원소는 상태 바꾸어주는 함수.
+이 함수를 세터(setter) 함수라고 부름.
+이름은 자유롭게 정함.
+
+3.4.2.3 useState 여러번 사용하기
+여러번 써도 상관없음.
+
+3.5 state 사용시 주의사항
+
+setState 혹은 useState를 통해 전달받은 세터 함수를 사용해야함.
+
+4장 이벤트 핸들링
+
+사용자가 DOM 요소들과 상호 작용하는것을 이벤트 (event) 라고 한다.
+HTML은 자바스크립트를 실행하도록 하지만, 리액트는 다르다.
+
+4.1 리액트의 이벤트 시스템
+
+4.1.1 이벤트 사용할때 주의사항
+
+	-1 이벤트 이름은 카멜 표기법 작성
+		ex) onClick
+		
+	-2 이벤트에 실행할 자바스크립트 코드를 전달하는 것이 아니라
+		함수 형태의 값을 전달.
+		HTML 에서 이벤트를 설정할때 큰 따옴표 안에 실행할 코드를
+		넣었지만, 리액트에서는 "함수 형태의 객체"를 전달합니다.
+		
+	-3 DOM 요소에만 이벤트를 설정할 수 있다.
+	직접 만든 컴포넌트에는 이벤트 자체 설정 불가.
+	전달받은 props를 컴포넌트 내부의 DOM 이벤트로는 설정할수 있다.
+	
+4.2 예제로 이벤트 핸들링 익히기.
+
+4.2.1 컴포넌트 생성 및 불러오기.
+
+4.2.1.1 컴포넌트 생성
+
+4.2.2 onChange 이벤트 핸들링 하기
+
+e 객체는 SyntheticEvent 로 웹 브라우저의 네이티브 이벤트를 감싸는 객체 !
+네이티브 이벤트와 인터페이스가 같으므로 HTML과 똑같이 사용.
+
+SyntheticEvent 는 네이티브 이벤트와 달리 끝나고나면 이벤트가 초기화.
+<- 정보 참조 안됨.
+만약 비동기적으로 이벤트 객체를 참조할 일이 있다면 e.persist() 함수 호출해야함.
+( 자동 초기화 )
+
+e는 event 객체이다.
+
+4.2.3 임의 메서드 만들기
+
+위에서는 이벤트를 처리 할때 렌더링을 하는 동시에 함수를 만들어서
+전달해주었다. 함수 형태의 값을 전달함.
+함수를 미리 준비하여 전달하는 방법도 있다. ( 가독성이 좋음 )
+
+함수가 호출될때 this 는 호출부에 따라 결정.
+클래스의 임의 메서드가 특정 HTML 요소의 이벤트로 등록되는 과정에서
+메서드와 this의 관게가 끊어져 버림.
+이것 때문에 임의 메서드가 이벤트로 등록 되어도
+this와 메서드를 바인딩 한다.
+안하면 undefined를 가리킴.
+
+4.2.3.2 Property Initializer Syntax를 사용한 메서드.
+
+*메소드 바인딩은 생성자 메서드에서 하는것이 정석.
+새 메서드를 만들때마다 constructor도 수정해야 하기때문에 불편.
+바벨의 transform-class-properties 문법을 사용하여
+화살표 함수 형태로 메서드 정의.
+
+4.2.4 input 여러개 다루기
+
+input이 여러개 일때는 어떻게 할까?
+event 객체를 활용. e.target.name 값 사용.
+onChange 이벤트 핸들러에서 e.target.name 은 해당 인풋의 message
+이 값을 사용하여 state 설정 하면 쉽게 해결.
+name 값이 username 인 input 렌더링, state 쪽에도 username 값 추가
+handleChange 변경
+
+[e.target.name]: e.target.value,
+객체 안에서 key를 []로 감싸면 그안에 넣은 레퍼런스가 가리키는
+실제 값이 key값으로 사용.
+
+4.2.5 onKeyPress 이벤트
+
+키를 눌렀을 때 발생하는 KeyPress 이벤트 처리하는 방법.
+comment 인풋에서 Enter를 눌렀을때 
+handleClick 메서드를 호출하도록 코드를 작성
+
+4.4 정리
+jQuery를 사용한 웹 어플에서 이벤트 다루는것과 비슷함.
+JS에 익숙하다면 쉽게 활용할수 있다.
+기존 HTML DOM Event를 알고 있다면 리액트의 컴포넌트 이벤트도
+쉽게 다룰수 있다.
+
+함수 컴포넌트에서 여러개의 인풋 상태를 관리하기위해 useState에서
+form 객체를 사용하는 방법도 배워보았다
+
+
+5장 ref: DOM에 이름달기
+
+일반 HTML에서 DOM 요소에 이름을 달때는 id를 사용.
+
+ref는 전역적으로 작동하지 않고 컴포넌트 내부에서만 작동.
+
+5.1 ref는 어떤 상황에서 사용해야 할까?
+정답은 DOM을 꼭 직접적으로 건드려야 할때
+
+5.1.3 DOM을 꼭 사용해야 하는 상황.
+- 특정 input 포커스 주기
+- 스크롤 박스 조작하기 
+- Canvas 요소에 그림 그리기 등
+
+이럴때는 DOM에 직접 접근, 이를 위해 ref
+
+5.2 ref 사용.
+5.2.1 콜백 함수를 통한 ref 설정.
+
+ref 만드는 가장 기본적인 방법은 ' 콜백 함수 '
+대상 요소에 ref 라는 콜백 함수를 props로 전달.
+이 콜백 함수는 ref 값을 파라미터로 전달받음.
+함수 내부에서 파라미터를 받은 ref를 컴포넌트 맴버 변수로 설정.
+
+<input ref={(ref) => {this.input=ref)} />
+
+위 코드는 this.input 은 input 요소의 DOM을 가리킨다.
+ref 이름은 원하는것으로 자유롭게. DOM 타입과 관계없음
+this.superman = ref 처럼 사용.
+
+5.2.2 createRef 를 통한 ref 설정.
+더 적은 코드로 쉽게 사용. 이 기능은 16.3 부터 사용.
+
+createRef 를 사용하여 ref 만들땐 컴포넌트 내부에서 맴버 변수로
+React.createRef() 를 담아 준다.
+
+해당 맴버 변수를 ref 달고자 하는 요소에 ref props로 넣어주면 ref 설정 완료.
+
+5.3 컴포넌트에 ref 달기
+
+컴포넌트에도 ref를 달수 있다.
+이방법은 주로 컴포넌트 내부에 있는 DOM을 컴포넌트 외부에서 사용할때 씀.
+사용 방법은 똑같다.
+
+<MyComponent
+	ref={(ref) => {this.myComponent=ref}}
+/>
+
+이렇게 ref를 달아 놓으면 myComponent 컴포넌트 내부의 ref 요소에도 접근 가능해진다.
+
+5.3.3 컴포넌트에 메서드 생성
+
+스크롤바를 맨 아래쪽으로 내리는 메서드 생성.
+DOM 노드가 가진 다음 값 :
+scrollTop : 세로 스크롤바 위치 ( 0~350 )
+scrollHeight : 스크롤이 있는 박스 안의 div 높이 ( 650 )
+clientHeight : 스크롤이 있는 박스의 높이 ( 300 )
+
+이렇게 만든 메서드는 부모 컴포넌트인 App 컴포넌트에서 ScrollBox에 ref를 달면 사용가능.
+
+onClick = {this.scrollBox.scrollBottom} 도 문법상으로는 문제가 없으나
+컴포넌트 첫 렌더링시 this.scrollBox 값이 undefined 이므로
+아예 새로운 함수를 만들고, 그 내부에서 this.scrollBox.scrollBottom 메서드를
+실행하면, 이미 한번 렌더링을 한 시점 이기 때문에 this.scrollBox 가 설정 되있다.

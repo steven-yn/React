@@ -1,0 +1,22 @@
+1단계 프론트 html
+백단 C언어, Perl -> CGI ( Common Getway Interface
+
+2단계 프론트 백단 -> Java(Servlet), C
+프론트 백단을 자바로만 짜는사람들이 있다. ( 서블렛 ) ==> 보안성뛰어남
+문제 : 작성하기가 어렵다.
+
+프론트 백단 보안성을 유지하면서 쉽게 하는 방법?
+
+3단계 프론트 JSP,ASP,PHP // 백단 자바, C/C++
+ASP.net
+
+4단계 프레임워크 : EJB -> 스트럿츠 -> Spring
+
+5단계 : 다양한 기능을 요구하게 됨
+		JSP, ASP, PHP로는 프론트를 감당할수 없음
+		SpringBoot -> xml, JSP 사용하지 않고 html과 java 만 사용
+		
+6단계 : 프론트, 백단 구분이 사라지고 풀스택, 민스택 -- 현/미래
+Shiny, Django, (React,VueJS, AngularJS) Nodejs
+
+월급 -> 회사의 능력 (수입구조)
