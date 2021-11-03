@@ -1,7 +1,7 @@
-import React, { useReducer, useRef, useCallback } from 'react';
 import TodoTemplate from './components/TodoTemplate';
 import TodoInsert from './components/TodoInsert';
 import TodoList from './components/TodoList';
+import React, { useReducer, useRef, useCallback } from 'react';
 
 function createBulkTodos() {
   const array = [];
@@ -17,16 +17,16 @@ function createBulkTodos() {
 
 function todoReducer(todos, action) {
   switch (action.type) {
-    case 'INSERT': // 새로 추가
-      // { type: 'INSERT', todo: { id: 1, text: 'todo', checked: false } }
+    case 'INSERT': // 새로추가
+      // { type: 'INSERT', todo: { id: 1, text: 'todo', checked: false}}
       return todos.concat(action.todo);
     case 'REMOVE': // 제거
       // { type: 'REMOVE', id: 1 }
       return todos.filter((todo) => todo.id !== action.id);
     case 'TOGGLE': // 토글
-      // { type: 'REMOVE', id: 1 }
+      // { type: 'TOGGLE', id: 1}
       return todos.map((todo) =>
-        todo.id === action.id ? { ...todo, checked: !todo.checked } : todo,
+        todo.id === action.id ? { ...todo, cheched: !todo.checked } : todo,
       );
     default:
       return todos;
@@ -36,8 +36,9 @@ function todoReducer(todos, action) {
 const App = () => {
   const [todos, dispatch] = useReducer(todoReducer, undefined, createBulkTodos);
 
-  // 고유 값으로 사용 될 id
-  // ref 를 사용하여 변수 담기
+  // 고유값으로 사용될 id
+  // ref를 사용하여 변수 담기
+
   const nextId = useRef(2501);
 
   const onInsert = useCallback((text) => {
@@ -47,7 +48,7 @@ const App = () => {
       checked: false,
     };
     dispatch({ type: 'INSERT', todo });
-    nextId.current += 1; // nextId 1 씩 더하기
+    nextId.current += 1; // nextId 1씩 더하기
   }, []);
 
   const onRemove = useCallback((id) => {
@@ -62,6 +63,7 @@ const App = () => {
     <TodoTemplate>
       <TodoInsert onInsert={onInsert} />
       <TodoList todos={todos} onRemove={onRemove} onToggle={onToggle} />
+      {/* props 전달하기*/}
     </TodoTemplate>
   );
 };

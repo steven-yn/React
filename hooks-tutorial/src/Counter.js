@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 
 function reducer(state, action) {
   // action.type 에 따라 다른 작업 수행

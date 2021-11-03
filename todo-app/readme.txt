@@ -66,4 +66,15 @@ createBulkTodos 라는 함수를 만들어 2500개의 데이터 자동생성.
 
 17. React.memo 사용하여 최적화
 
-18. onToggle onRemove onInsert 함수형 업데이트 적용.
+18. App 에서 onToggle onRemove onInsert 함수형 업데이트 적용.
+
+19. App 에서 onReducer 를 통한 매번 최신화 문제 해결.
+
+20. TodoList의 memo와 List를 사용한 컴포넌트 최적화
+
+21. TodoListItem 기존에 보여주는 내용을 div로 한번 감싸고, 해당 div에는
+TodoListItem-virtualized 라는 className 설정 및 props로 받은 style 적용.
+TodoListItem-virtualized 는 클래스는 컴포넌트 사이사이 테두리를 제데로 쳐주고,
+홀수 번째 / 짝수 번째 항목에 다른 배경 색상 설정 하기 위함.
+
+22. 
