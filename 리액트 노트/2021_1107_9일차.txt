@@ -219,4 +219,3 @@ SampleContainer.js - useEffect
 
 redux-thunk 를 처음 쓸때는 비록 작성할 코드가 많아서 불편할수 있지만,
 유용한 함수와 리듀서를 만들어 상태를 관리하면 매우 깔끔한 코드로 기능구현.
-
