@@ -35,7 +35,26 @@ index_m_02.js : 로딩 모듈을 루트 리듀서에 포함시키기.
 
 createRequestThunk_01.js : 디스패치 때 로딩 모듈 사용.
 SampleContainer_01.js : 로딩상태 조회.
-sample_m_02.js : 불필요한 코드 지우기.
+sample_m_03.js : 불필요한 코드 지우기.
 
 SampleContainer_02.js : useEffect 에서 try/catch 구문으로
 실패 케이스 관리.
+
+counter_m_02.js : saga 로 비동기 카운터 작성.
+index_m_03.js : rootSaga 만들기.
+index_04.js : redux-saga 미들웨어 적용.
+App_02.js : CounterContainer 렌더링.
+
+index_05.js : 리덕스 개발자 도구 적용하기.
+
+sample_m_04 : saga 로 sample 모듈 적용해보기.
+index_m_04 : 루트 사가에 등록.
+App_03 : SampleContainer 렌더링.
+
+createRequestSaga.js : saga 를 모듈 형식으로 작성.
+sample_m_05.js : createRequestSaga 적용.
+
+counter_m_03.js : select 사용해서 사가 내부에서 현재상태 조회.
+App_04 : CounterContainer 렌더링.
+
+counter_m_04.js : throttle 사용해보기.

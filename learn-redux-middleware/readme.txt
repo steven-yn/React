@@ -82,4 +82,30 @@ thunk 함수와 로딩상태 관리
 
 27. SampleContainer 에서 에러조회 코드 사용.
 
-28. 
+28. 기존에 thunk 함수로 구현했던 비동기 카운터를 
+redux-saga 를 사용해서 구현
+- yarn add redux-saga
+
+29. saga 를 사용해서 counter 모듈을
+비동기 카운터로 만들기.
+
+30. 루트 사가를 만들어주기.
+추후 다른 리듀서 에서도 사가를 사용할 것이기 떄문.
+
+31. CounterContainer 렌더링.
+변경할것은 없다.
+
+32. 개발자 도구 라이브러리 입히기.
+yarn add redux-devtools-extension
+
+33. redux-saga 사용해 API 요청.
+기존에 thunk 로 관리하던 액션생성함수 를 없애고,
+사가를 사용하여 처리.
+
+34. 이제 반복되는 코드를 따로 함수화하여 리팩토링.
+이전에 thunk 함수를 위해 createRequestThunk 함수 만든것 처럼
+createRequestSaga 라는 함수 만들기.
+
+35. sample 모듈에 적용하기.
+
+36. counter 모듈에서 현재상태 조회하는 select 써보기.
