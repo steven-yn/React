@@ -297,3 +297,14 @@ const로 값을 선언하고 사용하지 않으면, ESLint 기본설정은 이�
 에러로 간주.
 hello' is assigned a value but never used.eslintno-unused-vars
 
+사용되지 않는 const 값은 문법적으로 문제없지만,
+더 나은 코드를 작성하도록 장려하기 위해 ESLint 는 이를 오류로 취급.
+
+이러한 규칙을 끌수도 있다. 오류이름을 알아두면 .eslintrc.json 에서 
+오류를 경고로 바꾸거나 비활성화 할 수 있다.
+
+수정한뒤 저장하고, 에디터에서 파일 닫고 다시 열어주면 반영됨.
+no-console 값에 'off' 는 ESLint 기본설정에선 console.log 사용을 
+지양하고 있다. 그래서 이 규칙을 비활성화.
+또한, Prettier 를 통해 따옴표 변환 확인. 저장시 자동으로 코드 정리하는
+설정을 활성화 하지 않았다면 F1 누른후 format 이라고 입력.
