@@ -92,3 +92,64 @@ findByIdAndRemove() 함수 사용.
 
 31. Postman 으로 조금전 GET 요청한 주소로 DELETE 요청.
 그다음 똑같은 주소로 GET 요청 해보면, 404 오류가 발생. 'Not Found'
+
+32. 데이터 업데이트를 위한 update API 작성.
+findByIdAndUpdate() 함수 사용.
+
+33. Postman 에서 GET 해서 포스트 목록 받은후, 유효한 id값을 복사한후
+해당 id의 포스트를 업데이트 해보기.
+
+34. ObjectId 를 검증하기위한 코드를 작성하고, 원하는 API 에만 
+적용하기 위해 미들웨어를 만듦.
+
+35. apipst_index 에서 미들웨어 적용 
+
+36. 방금 적용한 파일 리팩토링. 나는 적용안함.
+
+37. Postman 에서 잘못된 id 로 GET 요청.
+
+38. 객체를 검증하기 위한 각 값을 if 문으로 비교할수도 있지만,
+여기서는 이를 수월하게 해주는 라이브러리 Joi 를 설치하여 사용.
+$ yarn add joi
+
+39. 설치후 write 함수에서 Joi 를 사용해 요청내용 검증.
+
+40. Postman 에서 tags 를 제외하고 API 요청 해보기.
+
+41. update API 에서도 비슷하게 요청내용 검증.
+write API 와 비슷하지만, require가 없다.
+
+42. Postman 에서 title 값에 숫자를 넣어서 보내보기.
+
+43. 페이지네이션 실습을 위해 가짜 데이터를 채워넣을 스크립트 작성.
+
+44. main.js 에서 방금 만든 함수 호출.
+
+45. 잘 적용되었는가 터미널과 Compass 확인.
+
+46. 적용이 되었다면 main 에서 함수 호출하는 코드 지우기.
+
+47. 가짜 포스트를 역순으로 불러오기위해 sort 함수 사용.
+
+48. postman 으로 GET 해보기.
+
+49. 한번에 보이는 포스트 개수를 제한.
+개수를 제한할땐 limit() 함수를 사용.
+
+50. postman 으로 GET 해보기.
+
+51. list API 에 페이지 기능 구현.
+skip 함수 사용.
+
+52. 마지막 페이지 번호 알림기능.
+커스텀 헤더를 설정하는 방법 사용.
+
+53. Postman 에서 GET 요청하여 Last-Page 헤더를 확인.
+
+54. 내용 길이 제한 기능을 구현.
+toJSON() 함수를 사용해서 mongoose 문서 인스턴스 를
+JSON 형태로 변환시켜줌.
+
+55. lean() 함수를 사용해서 같은 기능구현.
+
+56. Postman 으로 list API 호출.
