@@ -1,6 +1,6 @@
-import Post from '../../models/post';
-import mongooose from 'mongoose';
-import Joi from '../../../node_modules/joi/lib/index';
+import Post from "../../models/post";
+import mongooose from "mongoose";
+import Joi from "../../../node_modules/joi/lib/index";
 
 const { ObjectId } = mongooose.Types;
 
@@ -89,7 +89,7 @@ export const write = async (ctx) => {
 export const list = async (ctx) => {
   // query 는 문자열이기 때문에 숫자로 변환해 줘야함.
   // 값이 주어지지 않았다면 1을 기본으로 사용.
-  const page = parseInt(ctx.query.page || '1', 10);
+  const page = parseInt(ctx.query.page || "1", 10);
 
   if (page < 1) {
     ctx.status = 400;
@@ -100,7 +100,7 @@ export const list = async (ctx) => {
 
   // tag,username 값이 유효하면 객체 안에 넣고, 그렇지 않으면 빈배열.
   const query = {
-    ...(username ? { 'user.username': username } : {}),
+    ...(username ? { "user.username": username } : {}),
     ...(tag ? { tags: tag } : {}),
   };
 
@@ -115,7 +115,7 @@ export const list = async (ctx) => {
     // 마지막 페이지 알림기능 구현.
     // 커스텀 헤더를 설정.
     const postCount = await Post.countDocuments(query).exec();
-    ctx.set('Last-Page', Math.ceil(postCount / 10));
+    ctx.set("Last-Page", Math.ceil(postCount / 10));
 
     // 내용 길이 200자 제한기능 구현.
     ctx.body = posts.map((post) => ({

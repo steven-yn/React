@@ -1,39 +1,13 @@
-import Post from '../../models/post';
-import mongooose from 'mongoose';
-import Joi from '../../../node_modules/joi/lib/index';
+import Post from "../../models/post";
+import mongooose from "mongoose";
+import Joi from "../../../node_modules/joi/lib/index";
 
 const { ObjectId } = mongooose.Types;
 
-export const getPostById = async (ctx, next) => {
+export const checkObjectId = (ctx, next) => {
   const { id } = ctx.params;
   if (!ObjectId.isValid(id)) {
     ctx.status = 400; // Bad Request
-    return;
-  }
-
-  try {
-    const post = await Post.findById(id);
-
-    // 포스트가 존재하지 않을때
-    if (!post) {
-      ctx.status = 404;
-      return;
-    }
-
-    // 존재하면 포스트를 가져오고 다음으로 넘어간다.
-    ctx.state.post = post;
-    return next();
-  } catch (e) {
-    ctx.throw(500, e);
-  }
-};
-
-export const checkOwnPost = (ctx, next) => {
-  const { user, post } = ctx.state;
-
-  // 포스트에 등록된 user id가 로그인 중인 user 의 id 인지 확인
-  if (post.user._id.toString() !== user._id) {
-    ctx.status = 403;
     return;
   }
   return next();
@@ -43,7 +17,7 @@ export const checkOwnPost = (ctx, next) => {
 POST /api/posts
 {
     "title": "제목",
-    "body": "내용",
+    "body": "내용"
     "tags": ["태그1", "태그2"]
 }
 */
@@ -83,40 +57,30 @@ export const write = async (ctx) => {
 };
 
 /*
-    GET /api/posts?Username=&tag=&page=
+    GET /api/posts
 */
 
 export const list = async (ctx) => {
   // query 는 문자열이기 때문에 숫자로 변환해 줘야함.
   // 값이 주어지지 않았다면 1을 기본으로 사용.
-  const page = parseInt(ctx.query.page || '1', 10);
+  const page = parseInt(ctx.query.page || "1", 10);
 
   if (page < 1) {
     ctx.status = 400;
     return;
   }
 
-  const { tag, username } = ctx.query;
-
-  // tag,username 값이 유효하면 객체 안에 넣고, 그렇지 않으면 빈배열.
-  const query = {
-    ...(username ? { 'user.username': username } : {}),
-    ...(tag ? { tags: tag } : {}),
-  };
-
   try {
-    const posts = await Post.find(query)
+    const posts = await Post.find()
       .sort({ _id: -1 }) // 포스트 역순 불러오기 (last 포스트)
       .limit(10) // 보이는 개수제한
       .skip((page - 1) * 10) // 페이지 기능 구현.
       .lean() // DB 문서 인스턴스를 JSON 으로 변환
       .exec();
-
     // 마지막 페이지 알림기능 구현.
     // 커스텀 헤더를 설정.
-    const postCount = await Post.countDocuments(query).exec();
-    ctx.set('Last-Page', Math.ceil(postCount / 10));
-
+    const postCount = await Post.countDocuments().exec();
+    ctx.set("Last-Page", Math.ceil(postCount / 10));
     // 내용 길이 200자 제한기능 구현.
     ctx.body = posts.map((post) => ({
       ...post,
@@ -131,8 +95,18 @@ export const list = async (ctx) => {
 /*
   GET /api/posts/:id
 */
-export const read = (ctx) => {
-  ctx.body = ctx.state.post;
+export const read = async (ctx) => {
+  const { id } = ctx.params;
+  try {
+    const post = await Post.findById(id).exec();
+    if (!post) {
+      ctx.status = 404; // Not Found
+      return;
+    }
+    ctx.body = post;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
 };
 
 /*
