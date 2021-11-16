@@ -1,8 +1,33 @@
 import Post from '../../models/post';
 import mongooose from 'mongoose';
 import Joi from '../../../node_modules/joi/lib/index';
+import sanitizeHtml from 'sanitize-html';
 
 const { ObjectId } = mongooose.Types;
+
+const sanitizeOption = {
+  allowedTags: [
+    'h1',
+    'h2',
+    'b',
+    'i',
+    'u',
+    's',
+    'p',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'a',
+    'img',
+  ],
+  allowedAttributes: {
+    a: ['href', 'name', 'target'],
+    img: ['src'],
+    li: ['class'],
+  },
+  allowedSchemes: ['data', 'http'],
+};
 
 export const getPostById = async (ctx, next) => {
   const { id } = ctx.params;
@@ -70,7 +95,7 @@ export const write = async (ctx) => {
   const { title, body, tags } = ctx.request.body;
   const post = new Post({
     title,
-    body,
+    body: sanitizeHtml(body, sanitizeOption),
     tags,
     user: ctx.state.user,
   });
@@ -80,6 +105,13 @@ export const write = async (ctx) => {
   } catch (e) {
     ctx.throw(500, e);
   }
+};
+
+const removeHtmlAndShorten = (body) => {
+  const filtered = sanitizeHtml(body, {
+    allowedTags: [],
+  });
+  return filtered.length < 200 ? filtered : `${filtered.slice(0, 200)}...`;
 };
 
 /*
@@ -120,8 +152,7 @@ export const list = async (ctx) => {
     // 내용 길이 200자 제한기능 구현.
     ctx.body = posts.map((post) => ({
       ...post,
-      body:
-        post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...`,
+      body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
     ctx.throw(500, e);
@@ -167,6 +198,13 @@ export const update = async (ctx) => {
     ctx.status = 400; // Bad Request
     ctx.body = result.error;
     return;
+  }
+
+  const nextData = { ...ctx.request.body }; // 객체를 복사
+
+  // body 값이 주어졌다면 HTML 필터링
+  if (nextData.body) {
+    nextData.body = sanitizeHtml(nextData.body, sanitizeOption);
   }
 
   // update API
