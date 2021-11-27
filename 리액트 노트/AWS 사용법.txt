@@ -1,0 +1,170 @@
+소스 깃허브 올리기 
+
+1. 올릴 파일들 디렉토리에 모으기 
+2. git init 하고 git config 하기 
+-- 프로젝트 폴더 내에 .gitignore 파일 확인하기
+3. git add .
+4. git commit -m "커밋할내용"
+5. git remote add origin 링크복사
+6. git remote :: origin 확인 
+7. git remote -v :: hub 확인 
+8. git branch -M main :: 최초 한번만 
+9. git push -u origin main 
+
+
+내려받기 (우분투)
+
+1. git clone 주소 
+
+aws 기본 패키지 설치 
+
+1. nvm 설치
+> curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash 
+
+2. nvm --version
+
+3. nvm install --lts 
+
+4. sudo apt-get install -y nodejs
+
+5. 	npm 패키지 설치 
+	sudo apt-get install npm
+
+6. 	yarn 패키지 설치
+	curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+
+7. echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+8. sudo apt-get update && sudo apt-get install yarn
+
+9. node -v
+
+10. nginx 설치 
+	> sudo apt-get install nginx
+	
+11. systemctl start nginx
+
+12. sudo npm install -g pm2
+
+13. mongoDB 설치 MongoDB 4.2.17 Community
+	> wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
+
+14. echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+
+15. sudo apt-get update
+
+16. sudo apt-get install -y mongodb-org=4.2.17 mongodb-org-server=4.2.17 mongodb-org-shell=4.2.17 mongodb-org-mongos=4.2.17 mongodb-org-tools=4.2.17
+
+17. mongo --version
+
+18. MongoDB 실행 
+	> sudo service mongod start
+	
+19. sudo service mongod status
+
+20. MongoDB shell 실행. 
+	> mongo
+
+21. 관리자 계정 생성 및 권한 추가
+	> use admin
+
+22. db.createUser({ user: "steven", pwd: "1234", roles: ["userAdminAnyDatabase", "dbAdminAnyDatabase", "readWriteAnyDatabase"] })
+
+23. sudo nano /etc/mongod.conf
+
+24.
+# mongod.conf
+...
+
+# network interfaces
+net:
+  port: 27017
+  bindIp: 0.0.0.0
+
+...
+
+security:
+  authorization: 'enabled'
+
+...
+
+25. sudo service mongod restart
+
+26. mongo -u steven -p 1234
+
+27. aws 콘솔에서 보안 그룹 - 인바운드 - 편집 에서 27017 포트 추가. 0.0.0.0/0
+
+28. mongoCompass newconnection 와서 Fill in connection fields individually
+
+29. 등록했던 탄력적 IP 와 포트 27017 입력.
+
+30. compass 에서 확인후 크롬 열어서 3.143.160.44:27017 에 접속.
+-> 몽고 db 연동 완료.
+
+pm2 설치 및 실행 
+
+1. package.json 이 있는 디렉터리에 입장 (blog-backend)
+2. sudo nano process.yml
+3. 
+apps:
+  - name: blog-project
+    script: npm
+    args: start
+    instances: max
+    watch: true
+    exec_mode: cluster
+    merge_logs: true
+    autorestart: false
+    env:
+      NODE_ENV: .env
+      APP: main.js
+      PORT: 4000
+
+4. 
+npm i # 패키지 설치
+
+npm i -g pm2 # pm2 설치 
+pm2 start process.yml # 실행
+systemctl start nginx # nginx 실행
+
+5. sudo nano /etc/nginx/sites-available/default
+
+root /var/www/html; # 지우기
+index index.html index.html index.nginx-debian.html; # 지우기 
+
+
+server_name ec2-3-143-160-44.us-east-2.compute.amazonaws.com; # 수정
+location / {
+		proxy_pass http://localhost:4000; # 추가
+		
+}
+
+6. Letsencrypt 발급을 위해선 nginx를 꺼야합니다
+	> systemctl stop nginx
+
+6. systemctl restart nginx
+
+server_name 에 연결할 사이트 이름.
+
+ubuntu 서버
+
+i-0b5db1a084824f20f
+
+프라이빗 IPv4 주소 : 172.31.36.146
+퍼블릭 IPv4 주소 : 3.15.180.100
+퍼블릭 IPv4 DNS : ec2-3-143-160-44.us-east-2.compute.amazonaws.com
+탄력적 IPv4 주소 : 3.143.160.44
+root 계정 비번 : 1234
+
+
+------------------------------------------------------------------------------------------
+
+
+
+
+AMI 서버 
+
+i-03112cb55fe522d77
+퍼블릭 IPv4 주소 : 3.144.184.240
+퍼블릭 IPv4 DNS : ec2-18-221-163-157.us-east-2.compute.amazonaws.com
+탄력적 IPv4 주소 : 3.133.42.114

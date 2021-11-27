@@ -43,6 +43,7 @@ const PostViewerContainer = ({ match, history }) => {
   };
 
   const ownPost = (user && user._id) === (post && post.user._id);
+  const adminUser = (user._id = '619619ba76d92782dd867beb');
 
   return (
     <PostViewer
@@ -50,7 +51,11 @@ const PostViewerContainer = ({ match, history }) => {
       loading={loading}
       error={error}
       actionButtons={
-        ownPost && <PostActionButtons onEdit={onEdit} onRemove={onRemove} />
+        adminUser ? (
+          <PostActionButtons onEdit={onEdit} onRemove={onRemove} />
+        ) : (
+          ownPost && <PostActionButtons onEdit={onEdit} onRemove={onRemove} />
+        )
       }
     />
   );

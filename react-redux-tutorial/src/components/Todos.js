@@ -34,6 +34,29 @@ const Todos = ({
 
   const onChange = (e) => onChangeInput(e.target.value);
 
+  const arrayOb = [
+    { username: 'dus1111' },
+    { username: 'test2222' },
+    { username: 'steven3333' },
+    { username: 'react4444' },
+    { username: 'sungthree5555' },
+  ];
+
+  const nameOb = { username: 'steven3333' };
+
+  const nameSt = 'steven3333';
+
+  const arraySt = [
+    'dus1111',
+    'test2222',
+    'steven3333',
+    'react4444',
+    'sungthree5555',
+  ];
+
+  const findListbyObStOb = arraySt.find((rtrn) => (rtrn = nameOb.username));
+  console.log(findListbyObStOb);
+
   return (
     <div>
       <form onSubmit={onSubmit}>

@@ -1,0 +1,273 @@
+관리자 계정 만들기 및 관리자 페이지.
+
+만들어야 할것 :
+- 사용자가 회원가입시 관리자에게 가입 승인을 요청했습니다. 메시지 띄우기
+- 가입 요청시 DB에 등록 및 관리자 페이지의 요청 리스트로 보내주기.
+- 가입 요청에 대한 상태정의
+- 가입 승인에 대한 상태정의 
+- unsigned 다큐먼트 만들어서 관리자 페이지 목록으로 띄우기.
+- unsigned 안에 존재하는 유저인가?
+	t : 
+	- 로그인 시도시 관리자의 승인이 필요합니다. 메시지 띄우기
+	- 조건으로 내걸 상태? 관리자 페이지에서 승인 / 거절 했는가?
+	- 또는 관리자 페이지에 나타나는 목록에 존재 하는가?
+	( 이 경우 승인시에는 관리자페이지 에서만 사라지고,
+		거절시엔 DB에서도 회원정보가 삭제 되도록 )
+- 관리자 페이지 UI 만들기 ( 대시보드, 테이블, 가입 요청 유저 리스트 )
+
+=============
+- 먼저 관리자 페이지 UI를 만듦. Item-List 구조.
+	- 유저 전체를 List 로 받아오고, 승인시 display : none 되도록?
+	- '승인' 버튼 만들기.
+	- 상태가 묶여있도록 만들어보기.
+	
+- 회원가입시 submit 디스패치될때 관리자 페이지로도 데이터 스테이트가 전달.
+- 가입을 요청한 유저가 페이지에 뜸.
+- 승인 해주기 전까지 로그인은 가능하지만 글 작성을 할수가 없도록.
+- 
+
+(1) 기능설계 
+(2) UI 만들기 
+(3) API 연동하기 
+(4) 상태 관리하기 
+(5) 컨테이너 만들기
+
+진행순서 
+
+1. AdminPage.js 생성.
+
+2. App.js 에 라우트 등록. ('/admin')
+
+3. ReqList UI 준비하기 .
+	> components/admin/ReqList.js
+
+4. 회원가입시 어떤 데이터가 write 되는지 확인하고,
+	read 하는 방법 찾기.
+	
+5. REST API 에 readUser 만들기.
+
+/*
+GET /api/auth/readUser
+*/
+
+// 유저 목록 가지고오기.
+export const readUser = async (ctx) => {
+  const userList = await User.find();
+  ctx.body = userList;
+};
+
+Postman 으로 잘받아오는지 확인하였음.
+
+6. koa 라우터에 등록.
+
+7. 프론트에서 readUser REST API 불러오기 
+> ../lib/api>auth.js
+
+8. auth 리듀서에서 readUser 관련 액션 정의 및 리듀서 함수 만들기
+> ../modules/auth.js
+
+
+const [READ_USER, READ_USER_SUCCESS, READ_USER_FAILURE] =
+  createRequestActionTypes('auth/READ_USER');
+
+	
+	,,,,
+	
+export const readUser = createAction(READ_USER, ({ username, _id }) => ({
+  username,
+  _id,
+}));
+	
+	,,,,
+	
+// saga 생성
+const registerSaga = createRequestSaga(REGISTER, authAPI.register);
+const loginSaga = createRequestSaga(LOGIN, authAPI.login);
+const readUserSaga = createRequestSaga(READ_USER, authAPI.readUser);
+
+export function* authSaga() {
+  yield takeLatest(REGISTER, registerSaga);
+  yield takeLatest(LOGIN, loginSaga);
+  yield takeLatest(READ_USER, readUserSaga);
+}
+	,,,,
+	
+const initialState = {
+  register: {
+    username: '',
+    password: '',
+    passwordConfirm: '',
+  },
+  login: {
+    username: '',
+    password: '',
+  },
+  auth: null,
+  authError: null,
+  readUser: {
+    readUser: null,
+    error: null,
+  },
+	
+	,,,,
+	
+	[READ_USER_SUCCESS]: (state, { payload: readUser }) => ({
+      ...state,
+      readUser,
+    }),
+    [READ_USER_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      error,
+    }),
+
+9. ReqList 컨테이너에서 readUser 디스패치.
+	
+const ReqListContainer = () => {
+  const dispatch = useDispatch();
+  const { userList, loading } = useSelector(({ auth, loading }) => ({
+    userList: auth.readUser,
+    loading: loading['auth/READ_USER'],
+  }));
+
+  // 처음 마운트될 때 포스트 읽기 API 요청
+  useEffect(() => {
+    dispatch(readUser());
+    // 언마운트될 때 리덕스에서 포스트 데이터 없애기
+
+    return;
+  }, []);
+
+  return <ReqList loading={loading} readUser={userList} />;
+};
+10. ReqList 에서 값을 전달받아 DOM에 값 넣기.
+
+const UserItem = ({ userList }) => {
+  return (
+    <ReqItemBlock>
+      <UserList>
+        유저이름 : {userList.username}
+        <br />
+        아이디 : {userList._id}
+      </UserList>
+      <RequestPermitButton>
+        <Button cyan>승인</Button>
+      </RequestPermitButton>
+    </ReqItemBlock>
+  );
+};
+
+const ReqList = ({ readUser }) => {
+  return (
+    <ReqListBlock>
+      <UserTable>
+        <h3>유저정보</h3>
+      </UserTable>
+
+      {readUser[0]?.username && 'admin' ? (
+        <div>
+          {readUser.map((userList) => (
+            <UserItem key={userList._id} userList={userList} />
+          ))}
+        </div>
+      ) : (
+        <h1> 유저항목을 불러오지 못했습니다. </h1>
+      )}
+    </ReqListBlock>
+  );
+};
+
+export default ReqList;
+
+11. admin 페이지에서 승인 버튼 클릭시
+버튼이 존재하는 DOM의 해당 유저 정보를 redux state로 username 저장하기.
+permitUser 에 배열객체 형태로 저장됨.
+> ReqListContainer.js 
+
+const ReqListContainer = () => {
+  const dispatch = useDispatch();
+  const { userList, loading, permitUserList } = useSelector(
+    ({ auth, loading }) => ({
+      userList: auth.readUser,
+      loading: loading['auth/READ_USER'],
+      permitUserList: auth.permitUser,
+    }),
+  );
+
+...
+
+  const onPermit = (permitted) => {
+    dispatch(permitUser(permitted));
+  };
+
+...
+ return (
+    <ReqList
+      loading={loading}
+      readUser={userList}
+      onPermit={onPermit}
+      permitUserList={permitUserList}
+    />
+  );
+};
+
+> ReqList.js 
+
+
+const UserItem = ({ userList, onPermit, permitUserList }) => {
+  const onClick = () => {
+    onPermit(userList.username);
+  };
+  
+...
+
+  return (
+    <ReqItemBlock>
+      <UserList>
+        유저이름 : {userList.username}
+        <br />
+        아이디 : {userList._id}
+        <br />
+      </UserList>
+	  
+...
+
+const ReqList = ({ readUser, onPermit, permitUserList }) => {
+  return (
+    <ReqListBlock>
+      <DummyBlock />
+      <UserTable>
+        <h2>유저정보</h2>
+      </UserTable>
+
+      {readUser[0]?.username && 'admin' ? (
+        <div>
+          {readUser.map((userList) => (
+            <UserItem
+              key={userList._id}
+              userList={userList}
+              onPermit={onPermit}
+              permitUserList={permitUserList}
+            />
+          ))}
+        </div>
+      ) : (
+        <h1> 유저항목을 불러오지 못했습니다. </h1>
+      )}
+    </ReqListBlock>
+  );
+};
+
+내일 할거
+12. permitUser 와 각 UI 컴포넌트 들에서 어떤 조건을 걸어서 렌더링했는가?
+
+git 이전 커밋 삭제하기 
+
+프론트 취업 정보 알려주세요
+
+ppt, 주말에 어케할지
+
+진행순서 
+
+관리자 페이지 ('/admin') 만들기. (UI)
+관리자 페이지에 띄울 목록 만들기. ( 요청 받은 사용자 확인 )
+

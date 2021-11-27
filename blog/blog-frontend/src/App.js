@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import WritePage from './pages/WritePage';
 import PostPage from './pages/PostPage';
 import { Helmet } from 'react-helmet-async';
+import AdminPage from './pages/AdminPage';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
       <Route component={RegisterPage} path="/register" />
       <Route component={WritePage} path="/write" />
       <Route component={PostPage} path="/@:username/:postId" />
+      <Route component={AdminPage} path="/admin" />
     </>
   );
 };
