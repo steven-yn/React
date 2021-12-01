@@ -146,6 +146,20 @@ location / {
 
 server_name 에 연결할 사이트 이름.
 
+==========================
+실행 루틴 
+
+pm2 start process.yml # 실행
+systemctl start nginx # nginx 실행
+sudo service mongod start
+
+꼬여서 폴더를 날릴경우
+git init 및 git config user.~~~ 다 해놓고 
+git pull -t origin main 받기 
+backend 폴더가서 npm install 한번 받고
+process.yml 설정후 실행 루틴으로 가기
+
+
 ubuntu 서버
 
 i-0b5db1a084824f20f
@@ -156,6 +170,8 @@ i-0b5db1a084824f20f
 탄력적 IPv4 주소 : 3.143.160.44
 root 계정 비번 : 1234
 
+ver 1.1.0 으로 업데이트 하였습니다.
+리덕스 스토어를 통한 관리자 페이지를 구현하였습니다. 새로고침시 가입승인 정보가 사라질수도 있습니다.
 
 ------------------------------------------------------------------------------------------
 

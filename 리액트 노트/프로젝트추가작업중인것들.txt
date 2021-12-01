@@ -257,17 +257,55 @@ const ReqList = ({ readUser, onPermit, permitUserList }) => {
   );
 };
 
-내일 할거
-12. permitUser 와 각 UI 컴포넌트 들에서 어떤 조건을 걸어서 렌더링했는가?
 
-git 이전 커밋 삭제하기 
+  const findListbyObx2St = arrayOb.find((rtrn) => (rtrn.username = nameSt));
+  
+  const findListbyObx3 = arrayOb.find(
+	(rtrn) => (rtrn.username = userList.username),
+  );
 
-프론트 취업 정보 알려주세요
+  1 DB 리드유저에 다른 값 만들기 ( 불린으로 )
+  2 값이 들어올때까지 렌더링을 기다리도록 <<<<<
+  3 비동기로 값 등록 및 출력을 설정하고 출력이 나올때 검사하기.
+  permitUserList[permitUserList.length - 1]?.username ?
+  
+const [permit, setPermit] = useState(false);
+  const onClick = () => {
+    onPermit(userList.username);
+  };
 
-ppt, 주말에 어케할지
+  const checkPermit = permitUserList.find(
+    (rtrn) => rtrn.username === userList.username,
+  );
 
-진행순서 
+  useEffect(() => {
+    checkPermit ? setPermit(true) : setPermit(false);
+  }, [onClick]);
+  
+  
+  
+  
+  const [permit, setPermit] = useState(false);
 
-관리자 페이지 ('/admin') 만들기. (UI)
-관리자 페이지에 띄울 목록 만들기. ( 요청 받은 사용자 확인 )
+  const checkPermit = permitUserList.find(
+    (rtrn) => rtrn.username === showWriteButton,
+  );
 
+  useEffect(() => {
+    checkPermit ? setPermit(true) : setPermit(false);
+  }, []);
+
+  if (error) {
+    return <PostListBlock>에러가 발생했습니다.</PostListBlock>;
+  }
+
+  return (
+    <PostListBlock>
+      <WritePostButtonWrapper>
+        {permitUserList[permitUserList.length - 1]?.username &&
+          permit &&
+          showWriteButton && (
+            <Button cyan to="/write">
+              새 글 작성하기
+            </Button>
+          )}
