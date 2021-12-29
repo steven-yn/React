@@ -14,7 +14,7 @@
 
 내려받기 (우분투)
 
-1. git clone 주소 
+1. git pull 주소 
 
 aws 기본 패키지 설치 
 
